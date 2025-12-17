@@ -1,19 +1,25 @@
 import React, { useState, useRef } from "react";
-import { useTheme } from './ThemeContext';
-import { Sun, Moon } from 'lucide-react';
+import { useTheme, useThemeColors } from './ThemeContext';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Menu, X } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Navbar() {
   const { isDark, toggleTheme } = useTheme();
+  const colors = useThemeColors();
   const [menuOpen, setMenuOpen] = useState(false);
   const navRef = useRef(null);
 
   useGSAP(() => {
+    gsap.fromTo(
+      navRef.current,
+      { y: -40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.8, ease: "power2.out" }
+    );
+
     gsap.fromTo(
       navRef.current,
       {
@@ -21,7 +27,7 @@ export default function Navbar() {
         backdropFilter: "blur(0px)",
       },
       {
-        backgroundColor: "#00000050",
+        backgroundColor: colors.navBg,
         backdropFilter: "blur(10px)",
         duration: 0.6,
         ease: "power1.inOut",
@@ -33,43 +39,47 @@ export default function Navbar() {
         },
       }
     );
-  }, []);
+  }, [colors.navBg]);
 
   return (
     <nav
       ref={navRef}
-      className="bg-linear-to-r from-[#c7c7c7] via-[#6D728E] to-[#11192C] shadow-lg sticky top-0 z-50 transition-all duration-300"
+      className="shadow-lg sticky top-0 z-50 transition-all duration-300"
+      style={{ color: colors.navText }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
 
           {/* LOGO */}
-          <div className="text-lg font-semibold text-gray-300">
+          <div className="text-lg font-semibold" style={{ color: colors.navText }}>
             <img src="/logo.png" alt="logo" className="h-16 w-auto" />
           </div>
-         
 
           {/* MENU WEB */}
           <div className="hidden md:flex space-x-8 items-center">
             <a
               href="#acceuil"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition duration-300 hover:scale-105 after:content-[''] after:block after:w-0 after:h-0.5 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full"
+              style={{ color: colors.navText }}
             >
               Acceuil
             </a>
             <a
               href="#nos-offres"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition duration-300 hover:scale-105 after:content-[''] after:block after:w-0 after:h-0.5 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full"
+              style={{ color: colors.navText }}
             >
               Nos offres
             </a>
             <a
               href="#contact"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition duration-300 hover:scale-105 after:content-[''] after:block after:w-0 after:h-0.5 after:bg-yellow-400 after:transition-all after:duration-300 hover:after:w-full"
+              style={{ color: colors.navText }}
             >
               Contact
             </a>
           </div>
+
            <button
             onClick={toggleTheme}
             className="p-2 rounded-full transition-all duration-300 hover:scale-110 mr-4"
@@ -85,6 +95,7 @@ export default function Navbar() {
           <button
             className="md:hidden text-gray-300"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Ouvrir le menu"
           >
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -96,18 +107,21 @@ export default function Navbar() {
             <a
               href="#acceuil"
               className="text-gray-100 block py-2 font-[Playfair Display] font-bold transition duration-300 hover:scale-105"
+              style={{ color: colors.navText }}
             >
               Acceuil
             </a>
             <a
-              href="#offres"
+              href="#nos-offres"
               className="text-gray-100 block py-2 font-[Playfair Display] font-bold transition duration-300 hover:scale-105"
+              style={{ color: colors.navText }}
             >
               Nos offres
             </a>
             <a
               href="#contact"
               className="text-gray-100 block py-2 font-[Playfair Display] font-bold transition duration-300 hover:scale-105"
+              style={{ color: colors.navText }}
             >
               Contact
             </a>
@@ -117,14 +131,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-{/* BOUTON */}
-        {/* <a
-          href="https://wa.me/237690271950"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block px-8 py-3 border border-yellow-400 text-yellow-400 rounded-full 
-                     font-[Poppins] text-lg hover:bg-yellow-400 hover:text-[#0D1526] transition-all duration-300"
-        >
-          Nous contacter
-        </a> */}

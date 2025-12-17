@@ -1,11 +1,15 @@
 import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/all';
 import { useThemeColors } from './ThemeContext';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Nosoffres = () => {
     const colors = useThemeColors();
     const [currentIndex, setCurrentIndex] = useState(0);
+    const sectionRef = useRef(null);
 
     const allServices = [
         {
@@ -40,13 +44,42 @@ const Nosoffres = () => {
 
     const totalServices = allServices.length;
 
-    // Animation GSAP
-    useGSAP(() => {
-        const tl = gsap.timeline({ defaults: { duration: 0.8, ease: "power2.out" } });
-        tl.fromTo(".title-gsap", { opacity: 0, y: 20 }, { opacity: 1, y: 0 })
-          .fromTo(".image-gsap", { opacity: 0, x: -50 }, { opacity: 1, x: 0 }, "-=0.5")
-          .fromTo(".details-title-gsap", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.4")
-          .fromTo(".details-description-gsap", { opacity: 0, y: 20 }, { opacity: 1, y: 0 }, "-=0.4");
+    // Animation d'entrée de section
+    useGSAP((context) => {
+        // Use gsap's selector bound to the section ref so `q` is a function
+        // that only queries inside this component's section element.
+        const q = gsap.utils.selector(sectionRef);
+        gsap.timeline({
+            defaults: { ease: "power2.out", duration: 0.8 },
+            scrollTrigger: {
+                trigger: sectionRef.current,
+                start: "top 80%",
+                once: true,
+            }
+        })
+            .from(q('.offers-title'), { y: 40, opacity: 0 })
+            .from(q('.offers-bar'), { scaleX: 0, transformOrigin: "center" }, "-=0.4")
+            .from(q('.offers-nav button'), { y: 20, opacity: 0, stagger: 0.1 }, "-=0.2");
+    }, []);
+
+    // Animation des slides
+    useGSAP((context) => {
+        const tl = gsap.timeline({ defaults: { duration: 0.7, ease: "power2.out" } });
+
+        tl.to('.image-gsap', { x: -40, opacity: 0, duration: 0.25 })
+            .set('.image-gsap', { x: 40, opacity: 0 })
+            .to('.image-gsap', { x: 0, opacity: 1 })
+            .to('.title-gsap', { y: -10, opacity: 0, duration: 0.2 }, 0)
+            .set('.title-gsap', { y: 20, opacity: 0 })
+            .to('.title-gsap', { y: 0, opacity: 1 }, "-=0.1")
+            .to('.details-title-gsap', { y: -10, opacity: 0, duration: 0.2 }, 0)
+            .set('.details-title-gsap', { y: 20, opacity: 0 })
+            .to('.details-title-gsap', { y: 0, opacity: 1 }, "-=0.1")
+            .to('.details-description-gsap', { y: -10, opacity: 0, duration: 0.2 }, 0)
+            .set('.details-description-gsap', { y: 20, opacity: 0 })
+            .to('.details-description-gsap', { y: 0, opacity: 1 }, "-=0.1");
+
+        return () => tl.kill();
     }, [currentIndex]);
 
     const goToSlide = (index) => {
@@ -67,17 +100,17 @@ const Nosoffres = () => {
     }, [totalServices]);
 
     return (
-        <section id="nos-offres" className="relative py-20 px-6 overflow-hidden" style={{ background: colors.bgPrimary }}>
+        <section ref={sectionRef} id="nos-offres" className="relative py-20 px-6 overflow-hidden" style={{ background: colors.bgPrimary }}>
             {/* Titre */}
             <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif', color: colors.textPrimary }}>
+                <h2 className="offers-title text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'Playfair Display, serif', color: colors.textPrimary }}>
                     Nos Offres
                 </h2>
-                <div className="w-24 h-1 mx-auto mb-8" style={{ backgroundColor: colors.accent }}></div>
+                <div className="offers-bar w-24 h-1 mx-auto mb-8" style={{ backgroundColor: colors.accent }}></div>
             </div>
 
             {/* Navigation */}
-            <nav className="flex flex-wrap justify-center gap-8 mb-16">
+            <nav className="offers-nav flex flex-wrap justify-center gap-8 mb-16">
                 {allServices.map((service, index) => (
                     <button
                         key={service.id}
@@ -99,7 +132,7 @@ const Nosoffres = () => {
                     >
                         <span className="text-sm md:text-base" style={{ color: colors.textPrimary }}>{prevService.name}</span>
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: colors.accent }}>
-                            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/>
+                            <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" />
                         </svg>
                     </button>
 
@@ -119,14 +152,14 @@ const Nosoffres = () => {
                     >
                         <span className="text-sm md:text-base" style={{ color: colors.textPrimary }}>{nextService.name}</span>
                         <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" style={{ color: colors.accent }}>
-                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"/>
+                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" />
                         </svg>
                     </button>
                 </div>
 
                 {/* Bouton Commander */}
                 <div className="mt-24 text-center md:text-left md:absolute md:bottom-0 md:left-0">
-                    <button className="rounded-full font-[Playfair Display] font-bold transition-all shadow-lg px-6 py-3"
+                    <button className="rounded-full font-[Playfair Display] font-bold transition-all shadow-lg px-6 py-3 hover:scale-105 hover:shadow-xl"
                         style={{
                             backgroundColor: colors.accent,
                             color: colors.isDark ? '#0F172A' : '#FFFFFF'

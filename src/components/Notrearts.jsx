@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/all';
+import { useGSAP } from '@gsap/react';
 import { useThemeColors } from './ThemeContext';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function NotreArt() {
   const colors = useThemeColors();
-
   const galleryRef = useRef(null);
 
   const galleryImages = [
@@ -13,29 +16,45 @@ export default function NotreArt() {
     { src: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=800&fit=crop', size: 'large' },
     { src: 'https://images.unsplash.com/photo-1607083206968-13611e3d76db?w=400&h=300&fit=crop', size: 'small' },
     { src: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400&h=300&fit=crop', size: 'medium' },
-   
   ];
 
-  useEffect(() => {
-    const items = galleryRef.current.querySelectorAll(".gallery-item");
+  useGSAP((context) => {
+    const q = context.selector;
+    const mm = gsap.matchMedia();
 
-    gsap.fromTo(
-      items,
-      {
-        opacity: 0,
-        y: 40,
-        scale: 0.1,
+    const items = q(".gallery-item");
+
+    gsap.from(items, {
+      opacity: 0,
+      y: 40,
+      scale: 0.9,
+      duration: 1,
+      ease: "power3.out",
+      stagger: 0.15,
+      scrollTrigger: {
+        trigger: galleryRef.current,
+        start: "top 80%",
+        once: true,
       },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 1.5,
-        ease: "power3.out",
-        stagger: 0.15, 
-      }
-    );
-  }, []);
+    });
+
+    mm.add("(min-width: 768px)", () => {
+      const parallax = gsap.to(galleryRef.current, {
+        y: -20,
+        ease: "none",
+        scrollTrigger: {
+          trigger: galleryRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.3,
+        },
+      });
+
+      return () => parallax.scrollTrigger && parallax.scrollTrigger.kill();
+    });
+
+    return () => mm.revert();
+  }, { scope: galleryRef });
 
   return (
     <section
@@ -76,7 +95,7 @@ export default function NotreArt() {
             return (
               <div
                 key={idx}
-                className={`gallery-item rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition hover:scale-105 ${sizeClass}`}
+                className={`gallery-item rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition hover:scale-105 hover:-rotate-1 ${sizeClass}`}
               >
                 <img
                   src={img.src}
