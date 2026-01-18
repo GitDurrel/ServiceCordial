@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import { useTheme, useThemeColors } from './ThemeContext';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 import { gsap } from "gsap";
@@ -137,14 +138,14 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
 
           {/* LOGO */}
-          <div className="text-lg font-semibold flex items-center">
+          <Link to="/" className="text-lg font-semibold flex items-center">
             <img src="/logo.png" alt="logo" className="h-16 w-auto" />
-          </div>
+          </Link>
 
           {/* MENU DESKTOP */}
           <div className="hidden md:flex space-x-8 items-center">
-            <a
-              href="#acceuil"
+            <Link
+              to="/#acceuil"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
               style={{ 
                 color: colors.navText,
@@ -158,9 +159,9 @@ export default function Navbar() {
               }}
             >
               Acceuil
-            </a>
-            <a
-              href="#nos-offres"
+            </Link>
+            <Link
+              to="/#nos-offres"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
               style={{ 
                 color: colors.navText,
@@ -168,9 +169,9 @@ export default function Navbar() {
               }}
             >
               Nos offres
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/contact"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
               style={{ 
                 color: colors.navText,
@@ -178,7 +179,7 @@ export default function Navbar() {
               }}
             >
               Contact
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center gap-4">
@@ -211,8 +212,8 @@ export default function Navbar() {
         {/* MENU MOBILE */}
         {menuOpen && (
           <div className="md:hidden pb-4 space-y-2">
-            <a
-              href="#acceuil"
+            <Link
+              to="/#acceuil"
               className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
               style={{ 
                 color: colors.navText,
@@ -221,9 +222,9 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
             >
               Acceuil
-            </a>
-            <a
-              href="#nos-offres"
+            </Link>
+            <Link
+              to="/#nos-offres"
               className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
               style={{ 
                 color: colors.navText,
@@ -232,9 +233,9 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
             >
               Nos offres
-            </a>
-            <a
-              href="#contact"
+            </Link>
+            <Link
+              to="/contact"
               className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
               style={{ 
                 color: colors.navText,
@@ -243,7 +244,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)}
             >
               Contact
-            </a>
+            </Link>
           </div>
         )}
       </div>

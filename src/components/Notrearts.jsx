@@ -1,18 +1,11 @@
 import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/all';
 import { useGSAP } from '@gsap/react';
+import { useThemeColors } from './ThemeContext';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Simuler le contexte de thème pour l'artifact
-const useThemeColors = () => ({
-  bgPrimary: '#0F172A',
-  textPrimary: '#FFFFFF',
-  textSecondary: '#94A3B8',
-  accent: '#FCD34D',
-  isDark: true
-});
 
 export default function NotreArt() {
   const colors = useThemeColors();
@@ -204,8 +197,9 @@ export default function NotreArt() {
 
         {/* Bouton Voir Plus (optionnel) */}
         <div className="text-center mt-16">
-          <button
-            className="group relative px-8 py-4 rounded-full font-[Playfair Display] font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105"
+          <Link
+            to="/contact"
+            className="group relative inline-flex items-center justify-center px-8 py-4 rounded-full font-[Playfair Display] font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105"
             style={{
               backgroundColor: 'transparent',
               border: `2px solid ${colors.accent}`,
@@ -221,7 +215,7 @@ export default function NotreArt() {
               className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
               style={{ backgroundColor: colors.accent }}
             />
-          </button>
+          </Link>
         </div>
       </div>
     </section>

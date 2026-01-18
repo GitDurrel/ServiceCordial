@@ -2,17 +2,10 @@ import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/all';
+import { Link } from 'react-router-dom';
+import { useThemeColors } from './ThemeContext';
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Simuler le contexte de thème pour l'artifact
-const useThemeColors = () => ({
-    bgPrimary: '#0F172A',
-    textPrimary: '#FFFFFF',
-    textSecondary: '#94A3B8',
-    accent: '#FCD34D',
-    isDark: true
-});
 
 const Nosoffres = () => {
     const colors = useThemeColors();
@@ -224,7 +217,7 @@ const Nosoffres = () => {
                         <img
                             src={prevService.image}
                             alt={prevService.name}
-                            className="w-48 h-40 md:w-64 md:h-52 object-cover rounded-lg shadow-xl"
+                            className="w-44 h-32 md:w-64 md:h-52 object-cover rounded-lg shadow-xl"
                             style={{ opacity: 0.4, filter: 'brightness(0.7)' }}
                         />
                     </div>
@@ -241,7 +234,7 @@ const Nosoffres = () => {
                         <img
                             src={currentService.image}
                             alt={currentService.name}
-                            className="main-image-gsap relative w-72 h-60 md:w-96 md:h-80 object-cover rounded-2xl shadow-2xl"
+                            className="main-image-gsap relative w-64 h-52 md:w-96 md:h-80 object-cover rounded-2xl shadow-2xl"
                             style={{
                                 boxShadow: `0 20px 60px -15px ${colors.accent}60, 0 0 40px -10px ${colors.accent}40`
                             }}
@@ -253,7 +246,7 @@ const Nosoffres = () => {
                         <img
                             src={nextService.image}
                             alt={nextService.name}
-                            className="w-48 h-40 md:w-64 md:h-52 object-cover rounded-lg shadow-xl"
+                            className="w-44 h-32 md:w-64 md:h-52 object-cover rounded-lg shadow-xl"
                             style={{ opacity: 0.4, filter: 'brightness(0.7)' }}
                         />
                     </div>
@@ -286,16 +279,17 @@ const Nosoffres = () => {
                 <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-8">
                     {/* Bouton Commander */}
                     <div className="text-center md:text-left">
-                        <button
-                            className="rounded-full font-[Playfair Display] font-bold transition-all shadow-lg px-8 py-4 hover:scale-105 hover:shadow-xl"
+                        <Link
+                            to="/contact"
+                            className="inline-flex items-center justify-center rounded-full font-[Playfair Display] font-bold transition-all shadow-lg px-8 py-4 hover:scale-105 hover:shadow-xl"
                             style={{
                                 backgroundColor: colors.accent,
-                                color: colors.isDark ? '#0F172A' : '#FFFFFF',
+                                color: colors.isDark ? '#0F172A' : '#0B1220',
                                 boxShadow: `0 4px 20px ${colors.accent}40`
                             }}
                         >
                             Commander
-                        </button>
+                        </Link>
                     </div>
 
                     {/* Détails du pack */}

@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState } from "react";
+import { Link } from 'react-router-dom';
 import { useThemeColors } from "./ThemeContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -113,7 +114,7 @@ export default function Heros() {
   );
 
   return (
-    <section ref={containerRef} style={{ background: colors.bgPrimary }}>
+    <section ref={containerRef} id="acceuil" style={{ background: colors.bgPrimary }}>
 
       {/* HERO SECTION */}
       <div
@@ -123,13 +124,22 @@ export default function Heros() {
 
         {/* Images Flottantes en arrière-plan */}
         <div className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block">
-          <div className="img-float-1 absolute top-[20%] left-[10%] w-[280px] h-[190px] rounded-2xl overflow-hidden shadow-2xl transform -rotate-6 border-4 border-white/10 will-change-transform">
+          <div
+            className="img-float-1 absolute top-[20%] left-[10%] w-[280px] h-[190px] rounded-2xl overflow-hidden shadow-2xl transform -rotate-6 will-change-transform"
+            style={{ border: `4px solid ${colors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)'}` }}
+          >
             <img src="/img2_hero.jpg" className="w-full h-full object-cover" alt="decoration" />
           </div>
-          <div className="img-float-2 absolute bottom-[15%] left-[10%] w-[240px] h-[300px] rounded-2xl overflow-hidden shadow-2xl transform rotate-3 border-4 border-white/10 will-change-transform">
+          <div
+            className="img-float-2 absolute bottom-[15%] left-[10%] w-[240px] h-[300px] rounded-2xl overflow-hidden shadow-2xl transform rotate-3 will-change-transform"
+            style={{ border: `4px solid ${colors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)'}` }}
+          >
             <img src="/img3_hero.jpg" className="w-full h-full object-cover" alt="decoration" />
           </div>
-          <div className="img-float-3 absolute top-[25%] right-[5%] w-[320px] h-[400px] rounded-2xl overflow-hidden shadow-2xl transform rotate-6 border-4 border-white/10 will-change-transform">
+          <div
+            className="img-float-3 absolute top-[25%] right-[5%] w-[320px] h-[400px] rounded-2xl overflow-hidden shadow-2xl transform rotate-6 will-change-transform"
+            style={{ border: `4px solid ${colors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,23,42,0.1)'}` }}
+          >
             <img src="/img_hero.jpeg" className="w-full h-full object-cover" alt="decoration" />
           </div>
         </div>
@@ -154,17 +164,19 @@ export default function Heros() {
             </p>
 
             {/* CTA avec couleur jaune d'accentuation */}
-            <a href="https://wa.me/237686353524"
+            <Link
+              to="/contact"
               className="group flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold transition-all hover:scale-105 shadow-lg"
               style={{
                 backgroundColor: colors.accent,
                 color: colors.isDark ? "#0F172A" : "#0B1220"
-              }}>
+              }}
+            >
               Préparer une surprise
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="-49 141 512 512" width="16" height="16" fill="currentColor" className="transition-transform duration-300 group-hover:translate-x-1">
                 <path d="M-24 422h401.645l-72.822 72.822c-9.763 9.763-9.763 25.592 0 35.355 9.763 9.764 25.593 9.762 35.355 0l115.5-115.5a25 25 0 0 0 0-35.355l-115.5-115.5c-9.763-9.762-25.593-9.763-35.355 0-9.763 9.763-9.763 25.592 0 35.355l72.822 72.822H-24c-13.808 0-25 11.193-25 25S-37.808 422-24 422"></path>
               </svg>
-            </a>
+            </Link>
           </div>
 
           {/* Vidéo Centrale (CORRIGÉE z-index) */}
@@ -208,8 +220,12 @@ export default function Heros() {
                   key={item.key} 
                   className="mission-item p-5 rounded-xl cursor-pointer transition-all hover:scale-[1.02]"
                   style={{
-                    backgroundColor: idx === activeMissionIndex ? `${colors.accent}20` : "rgba(255,255,255,0.03)",
-                    border: `2px solid ${idx === activeMissionIndex ? colors.accent : "rgba(255,255,255,0.1)"}`,
+                    backgroundColor: idx === activeMissionIndex
+                      ? `${colors.accent}20`
+                      : colors.isDark
+                        ? "rgba(255,255,255,0.03)"
+                        : "rgba(15,23,42,0.04)",
+                    border: `2px solid ${idx === activeMissionIndex ? colors.accent : colors.isDark ? "rgba(255,255,255,0.1)" : "rgba(15,23,42,0.08)"}`,
                   }}
                   onMouseEnter={() => setActiveMissionIndex(idx)}
                 >
@@ -323,8 +339,8 @@ export default function Heros() {
               </div>
 
               {/* CTA secondaire */}
-              <a
-                href="https://wa.me/237690271950"
+              <Link
+                to="/contact"
                 className="block w-full text-center px-6 py-4 rounded-full font-semibold transition-all hover:scale-105"
                 style={{
                   backgroundColor: colors.accent,
@@ -333,7 +349,7 @@ export default function Heros() {
                 }}
               >
                 Réserver cette prestation
-              </a>
+              </Link>
 
             </div>
           </div>
