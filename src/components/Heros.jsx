@@ -2,462 +2,342 @@ import React, { useMemo, useRef, useState } from "react";
 import { useThemeColors } from "./ThemeContext";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger } from "gsap/all";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Heros() {
   const colors = useThemeColors();
   const containerRef = useRef(null);
-  const confettiContainerRef = useRef(null);
-
+  const heroRef = useRef(null);
   const [activeMissionIndex, setActiveMissionIndex] = useState(0);
 
   const missionItems = useMemo(
     () => [
-      {
-        key: "anniv",
-        title: "🎉 Anniversaires",
-        desc: "Des surprises personnalisées, élégantes et pleines d’émotion.",
-        mediaType: "image",
-        mediaSrc: "/img1.png",
-      },
-      {
-        key: "romantique",
-        title: "💖 Moments romantiques",
-        desc: "Une mise en scène délicate, pensée avec cœur, pour marquer les esprits.",
-        mediaType: "image",
-        mediaSrc: "/img2.png",
-      },
-      {
-        key: "domicile",
-        title: "🎁 Surprises à domicile",
-        desc: "Décor, musique, timing… tout est orchestré pour un effet WAOUH.",
-        mediaType: "video",
-        mediaSrc: "/video.mp4",
-      },
-      {
-        key: "remerciements",
-        title: "🙌 Remerciements & reconnaissance",
-        desc: "Offrir du plaisir en cadeau, avec discrétion et professionnalisme.",
-        mediaType: "image",
-        mediaSrc: "/apropos.jpeg",
-      },
-      {
-        key: "special",
-        title: "✨ Événements spéciaux",
-        desc: "Une expérience unique, authentique, élégante et mémorable.",
-        mediaType: "image",
-        mediaSrc: "/img1.png",
-      },
+      { key: "anniv", title: "🎉 Anniversaires", desc: "Des surprises personnalisées, élégantes et pleines d'émotion.", mediaType: "image", mediaSrc: "/img1.png" },
+      { key: "romantique", title: "💖 Moments romantiques", desc: "Une mise en scène délicate, pensée avec cœur, pour marquer les esprits.", mediaType: "image", mediaSrc: "/img2.png" },
+      { key: "domicile", title: "🎁 Surprises à domicile", desc: "Décor, musique, timing… tout est orchestré pour un effet WAOUH.", mediaType: "video", mediaSrc: "/video.mp4" },
+      { key: "remerciements", title: "🙌 Remerciements & reconnaissance", desc: "Offrir du plaisir en cadeau, avec discrétion et professionnalisme.", mediaType: "image", mediaSrc: "/apropos.jpeg" },
+      { key: "special", title: "✨ Événements spéciaux", desc: "Une expérience unique, authentique, élégante et mémorable.", mediaType: "image", mediaSrc: "/img1.png" },
     ],
     []
   );
 
   const activeItem = missionItems[activeMissionIndex];
 
-  // 1) Setup GSAP/ScrollTriggers (UNE SEULE FOIS)
   useGSAP(
-    (context) => {
-      const q = context.selector;
+    () => {
       const mm = gsap.matchMedia();
 
-      // --- hauteur navbar réelle (pour éviter contenu caché) ---
-      const getNavH = () => {
-        const nav = document.querySelector("nav");
-        return nav?.offsetHeight ? nav.offsetHeight : 72;
-      };
-
-      // --- confettis init ---
-      const confettiContainer = confettiContainerRef.current;
-      if (confettiContainer) {
-        const existing = confettiContainer.querySelectorAll(".confetti-piece");
-        if (!existing.length) {
-          const palette = ["#FFC107", "#F8FAFC", "#A5C9FF", "#FFE7A0"];
-          Array.from({ length: 18 }).forEach(() => {
-            const piece = document.createElement("span");
-            piece.className = "confetti-piece";
-            Object.assign(piece.style, {
-              position: "absolute",
-              width: "7px",
-              height: "12px",
-              borderRadius: "5px",
-              backgroundColor: gsap.utils.random(palette),
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              zIndex: "8",
-              opacity: "0",
-            });
-            confettiContainer.appendChild(piece);
-          });
-        }
-      }
-
-      const playConfetti = () => {
-        if (!confettiContainer) return;
-        const pieces = confettiContainer.querySelectorAll(".confetti-piece");
-        if (!pieces.length) return;
-
-        gsap.fromTo(
-          pieces,
-          { x: 0, y: 0, scale: 0.6, opacity: 1, rotate: 0 },
-          {
-            duration: 1.2,
-            x: () => gsap.utils.random(-95, 95),
-            y: () => gsap.utils.random(-95, 45),
-            rotate: () => gsap.utils.random(-240, 240),
-            scale: () => gsap.utils.random(0.8, 1.35),
-            opacity: 0,
-            ease: "power3.out",
-            stagger: 0.035,
-          }
-        );
-      };
-
-      // confettis on enter
-      ScrollTrigger.create({
-        trigger: q(".hero-top")[0],
-        start: "top 80%",
-        once: true,
-        onEnter: playConfetti,
-      });
-
-      // intro
-      gsap
-        .timeline({
-          defaults: { duration: 0.9, ease: "power2.out" },
-          scrollTrigger: {
-            trigger: q(".hero-top")[0],
-            start: "top 80%",
-            once: true,
-          },
-        })
-        .from(q(".hero-text-block .title"), { y: 40, opacity: 0 })
-        .from(q(".hero-text-block .subtitle"), { y: 22, opacity: 0 }, "-=0.55")
-        .from(q(".hero-text-block .hero-cta"), { y: 18, opacity: 0 }, "-=0.45")
-        .from(q(".hero-left-card, .hero-center-media, .hero-right-card"), { y: 24, opacity: 0, stagger: 0.1 }, "-=0.45")
-        .add(playConfetti, "-=0.25");
-
-      // Freepik effect desktop (avec offset navbar)
+      // DESKTOP - Effet Freepik
       mm.add("(min-width: 1024px)", () => {
-        const navH = getNavH();
-
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: q(".hero-top")[0],
-            start: `top top+=${navH}`,
-            end: `bottom+=150% top+=${navH}`,
-            scrub: true,
+            trigger: heroRef.current,
+            start: "top top",
+            end: "+=150%",
+            scrub: 1,
             pin: true,
             anticipatePin: 1,
-            invalidateOnRefresh: true,
           },
         });
 
-        tl.fromTo(q(".hero-center"), { flexBasis: "36%" }, { flexBasis: "88%", duration: 1.2, ease: "power2.out" }, 0)
-          .fromTo(q(".hero-left"), { flexBasis: "32%", opacity: 1 }, { flexBasis: "0%", opacity: 0, duration: 1 }, 0.05)
-          .fromTo(q(".hero-right"), { flexBasis: "32%", opacity: 1 }, { flexBasis: "0%", opacity: 0, duration: 1 }, 0.05)
-          .to(q(".hero-center-media"), { scale: 1.22, borderRadius: "0px", duration: 1.1, ease: "power2.out" }, 0.18);
+        tl
+          // Texte disparaît
+          .to(".hero-ui-header", {
+            y: -200,
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.out",
+          }, 0)
 
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-        };
+          // Vidéo s'agrandit en fullscreen (RÉVISÉ)
+          .to(".center-video-wrapper", {
+            width: "100vw",
+            height: "100vh",
+            borderRadius: "0px",
+            ease: "power1.inOut",
+            duration: 1.2,
+          }, 0)
+
+          // Images flottantes s'envolent
+          .to(".img-float-1", {
+            x: -200,
+            y: -300,
+            opacity: 30,
+            rotate: -20,
+            duration: 1.5,
+          }, 0)
+          .to(".img-float-2", {
+            x: -300,
+            y: 200,
+            opacity: 30,
+            rotate: 15,
+            duration: 1.5,
+          }, 0)
+          .to(".img-float-3", {
+            x: 300,
+            y: 50,
+            opacity: 30,
+            rotate: 20,
+            duration: 1.5,
+          }, 0);
       });
 
-      // mobile light
+      // Mobile
       mm.add("(max-width: 1023px)", () => {
-        const tl = gsap.timeline({
+        gsap.to(".center-video-wrapper", {
+          scale: 1.05,
           scrollTrigger: {
-            trigger: q(".hero-top")[0],
-            start: "top 80%",
+            trigger: heroRef.current,
+            start: "top top",
             end: "bottom center",
-            scrub: true,
-          },
+            scrub: true
+          }
         });
-
-        tl.to(q(".hero-center-media"), { scale: 1.08, duration: 1 }, 0)
-          .to(q(".hero-left"), { y: 24, opacity: 0.6, duration: 1 }, 0)
-          .to(q(".hero-right"), { y: 24, opacity: 0.6, duration: 1 }, 0);
-
-        return () => {
-          tl.scrollTrigger?.kill();
-          tl.kill();
-        };
       });
 
-      // Mission: activation au scroll (sans boucle rAF)
-      const itemEls = q(".mission-item");
-      itemEls.forEach((el, idx) => {
+      // Missions
+      const items = containerRef.current?.querySelectorAll(".mission-item");
+      items?.forEach((item, idx) => {
         ScrollTrigger.create({
-          trigger: el,
-          start: "top 65%",
-          end: "bottom 35%",
+          trigger: item,
+          start: "top 60%",
+          end: "bottom 40%",
           onEnter: () => setActiveMissionIndex(idx),
           onEnterBack: () => setActiveMissionIndex(idx),
         });
       });
-
-      // mission fade
-      gsap.from(q(".mission-fade"), {
-        y: 24,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: q(".mission-section")[0],
-          start: "top 80%",
-          once: true,
-        },
-      });
-
-      // refresh correct quand la navbar change
-      ScrollTrigger.addEventListener("refreshInit", () => {
-        // nothing, just ensures navH recalculated through invalidateOnRefresh
-      });
-
-      return () => {
-        mm.revert();
-        ScrollTrigger.getAll().forEach((st) => {
-          // ne tue pas tout globalement si tu as d'autres sections,
-          // mais ici on est scoped, donc ok: context.revert() gère la plupart.
-        });
-      };
     },
     { scope: containerRef }
   );
 
-  // 2) Anim du media mission à chaque changement d’item (propre)
-  useGSAP(
-    (context) => {
-      const q = context.selector;
-      const media = q(".mission-media")[0];
-      if (!media) return;
-
-      gsap.fromTo(
-        media,
-        { y: 10, opacity: 0.65, scale: 0.985 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.55, ease: "power2.out" }
-      );
-    },
-    { scope: containerRef, dependencies: [activeMissionIndex] }
-  );
-
   return (
-    <section
-      ref={containerRef}
-      id="acceuil"
-      className="relative py-16 md:py-20 px-4 md:px-8 overflow-hidden"
-      style={{ background: colors.bgPrimary }}
-    >
-      <div className="max-w-7xl mx-auto space-y-20">
-        {/* HERO TOP */}
-        <div className="hero-top grid lg:grid-cols-2 gap-12 items-center">
-          {/* Texte */}
-          <div className="hero-text-block space-y-6">
-            <h1
-              className="title text-6xl md:text-7xl lg:text-8xl leading-[0.92] tracking-wide font-extrabold relative"
-              style={{
-                fontFamily: "Playfair Display, serif",
-                color: colors.textPrimary,
-                textShadow: "inset 0 2px 8px rgba(0,0,0,0.35), 0 10px 30px rgba(0,0,0,0.22)",
-                WebkitTextStroke: "1px rgba(0,0,0,0.14)",
-              }}
-            >
-              SERV
-              <span className="hero-i relative inline-block mx-0.5">
-                <span className="relative inline-block">
-                  I
-                  <span className="hero-i-dot absolute left-1/2 -translate-x-1/2 -top-2" style={{ width: 10, height: 10 }}>
-                    <span
-                      className="hero-i-dot-core inline-block rounded-full"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        backgroundColor: colors.accent,
-                        boxShadow: "0 0 10px rgba(255,193,7,0.9)",
-                        position: "relative",
-                        zIndex: 10,
-                      }}
-                    />
-                    <span ref={confettiContainerRef} className="hero-confetti absolute inset-[-10px] pointer-events-none" />
-                  </span>
-                </span>
-              </span>
-              CE CORDIALE
-            </h1>
+    <section ref={containerRef} style={{ background: colors.bgPrimary }}>
 
-            <p
-              className="subtitle font-[Poppins] font-medium text-sm md:text-base lg:text-lg max-w-3xl leading-relaxed opacity-90"
-              style={{ color: colors.textSecondary }}
-            >
-              Offrez plus qu’un cadeau, offrez une surprise. Mariages, anniversaires, baptêmes, demandes spéciales…
-              Service Cordiale met en scène vos émotions.
-            </p>
+      {/* HERO SECTION */}
+      <div
+        ref={heroRef}
+        className="relative w-full min-h-screen overflow-hidden flex flex-col items-center justify-center px-6 py-32"
+      >
 
-            <div className="hero-cta flex flex-wrap items-center gap-4">
-              <a
-                href="https://wa.me/237690271950"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3 rounded-full font-[Poppins] font-semibold shadow-lg transition-transform duration-300 hover:-translate-y-0.5"
-                style={{ backgroundColor: colors.accent, color: colors.isDark ? "#0F172A" : "#0B1220" }}
-              >
-                Préparer une surprise
-              </a>
-              <a
-                href="#nos-offres"
-                className="px-6 py-3 rounded-full font-[Poppins] font-semibold border transition-all duration-300 hover:-translate-y-0.5"
-                style={{ borderColor: colors.accent, color: colors.textPrimary }}
-              >
-                Découvrir nos offres
-              </a>
-            </div>
+        {/* Images Flottantes en arrière-plan */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block">
+          <div className="img-float-1 absolute top-[20%] left-[10%] w-[280px] h-[190px] rounded-2xl overflow-hidden shadow-2xl transform -rotate-6 border-4 border-white/10 will-change-transform">
+            <img src="/img2_hero.jpg" className="w-full h-full object-cover" alt="decoration" />
           </div>
-
-          {/* VISUEL : plus grand */}
-          <div className="hero-visual flex gap-5 items-stretch">
-            <div className="hero-left basis-[32%] shrink-0 flex items-center justify-center">
-              <div
-                className="hero-left-card relative w-full rounded-3xl overflow-hidden shadow-2xl"
-                style={{ height: "clamp(230px, 26vw, 380px)" }}
-              >
-                <img src="/img1.png" alt="Client surpris" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-            </div>
-
-            <div className="hero-center basis-[36%] shrink-0 flex items-center justify-center">
-              <div
-                className="hero-center-media relative w-full rounded-3xl overflow-hidden shadow-2xl border border-white/10"
-                style={{ height: "clamp(230px, 26vw, 380px)", background: colors.bgSecondary }}
-              >
-                <video
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src="/video.mp4"
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                />
-              </div>
-            </div>
-
-            <div className="hero-right basis-[32%] shrink-0 flex items-center justify-center">
-              <div
-                className="hero-right-card relative w-full rounded-3xl overflow-hidden shadow-2xl"
-                style={{ height: "clamp(230px, 26vw, 380px)" }}
-              >
-                <img src="/img2.png" alt="Cadeaux prêts à être offerts" className="absolute inset-0 w-full h-full object-cover" />
-              </div>
-            </div>
+          <div className="img-float-2 absolute bottom-[15%] left-[10%] w-[240px] h-[300px] rounded-2xl overflow-hidden shadow-2xl transform rotate-3 border-4 border-white/10 will-change-transform">
+            <img src="/img3_hero.jpg" className="w-full h-full object-cover" alt="decoration" />
+          </div>
+          <div className="img-float-3 absolute top-[25%] right-[5%] w-[320px] h-[400px] rounded-2xl overflow-hidden shadow-2xl transform rotate-6 border-4 border-white/10 will-change-transform">
+            <img src="/img_hero.jpeg" className="w-full h-full object-cover" alt="decoration" />
           </div>
         </div>
 
-        {/* MISSION SECTION */}
-        <div className="mission-section grid lg:grid-cols-2 gap-12 items-start">
-          <div className="space-y-8 mission-fade">
-            <div className="space-y-3">
-              <p className="text-sm font-[Poppins] uppercase tracking-[0.25em]" style={{ color: colors.accent }}>
+        {/* Contenu Principal - z-10 pour être au-dessus des images */}
+        <div className="relative z-10 flex flex-col items-center w-full max-w-6xl">
+
+          {/* Header Texte */}
+          <div className="hero-ui-header flex flex-col items-center gap-6 text-center max-w-4xl mb-12">
+
+
+            {/* Titre */}
+            <h1 className="text-5xl lg:text-7xl font-normal leading-tight tracking-tight"
+              style={{ fontFamily: "Playfair Display, serif", color: colors.textPrimary }}>
+              Service Cordial
+            </h1>
+
+            {/* Sous-titre */}
+            <p className="mb-2 text-base lg:text-xl opacity-60 max-w-2xl" style={{ color: colors.textPrimary }}>
+              Offrez plus qu'un cadeau, offrez une surprise. Mariages, anniversaires...
+              nous mettons en scène vos émotions avec élégance.
+            </p>
+
+            {/* CTA avec couleur jaune d'accentuation */}
+            <a href="https://wa.me/237686353524"
+              className="group flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold transition-all hover:scale-105 shadow-lg"
+              style={{
+                backgroundColor: colors.accent,
+                color: colors.isDark ? "#0F172A" : "#0B1220"
+              }}>
+              Préparer une surprise
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="-49 141 512 512" width="16" height="16" fill="currentColor" className="transition-transform duration-300 group-hover:translate-x-1">
+                <path d="M-24 422h401.645l-72.822 72.822c-9.763 9.763-9.763 25.592 0 35.355 9.763 9.764 25.593 9.762 35.355 0l115.5-115.5a25 25 0 0 0 0-35.355l-115.5-115.5c-9.763-9.762-25.593-9.763-35.355 0-9.763 9.763-9.763 25.592 0 35.355l72.822 72.822H-24c-13.808 0-25 11.193-25 25S-37.808 422-24 422"></path>
+              </svg>
+            </a>
+          </div>
+
+          {/* Vidéo Centrale (CORRIGÉE z-index) */}
+          <div
+            className="center-video-wrapper relative overflow-hidden shadow-2xl mx-auto z-50 
+                 w-[95%] h-[50vh] rounded-3xl 
+                 lg:w-[80%] lg:h-[60vh] lg:max-w-[1200px] lg:rounded-[24px]"
+          >
+            <video
+              src="/video.mp4"
+              className="w-full h-full object-cover"
+              autoPlay muted loop playsInline
+            />
+            <div className="absolute inset-0 bg-black/10"></div>
+          </div>
+
+        </div>
+      </div>
+
+     {/* SECTION MISSION */}
+      <div id="nos-offres" className="mission-section max-w-6xl mx-auto px-6 py-24">
+        <div className="grid md:grid-cols-2 gap-16">
+          
+          <div className="mission-content space-y-8">
+            <div>
+              <p className="text-sm uppercase tracking-wider mb-3 font-bold" style={{ color: colors.accent }}>
                 Notre mission
               </p>
-              <h2
-                className="text-3xl md:text-4xl font-bold"
-                style={{ fontFamily: "Playfair Display, serif", color: colors.textPrimary }}
-              >
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 leading-tight" 
+                style={{ fontFamily: "Playfair Display, serif", color: colors.textPrimary }}>
                 Transformez chaque instant en souvenir
               </h2>
-              <p className="text-base font-[Poppins] leading-relaxed" style={{ color: colors.textSecondary }}>
-                Chez Service Cordial, nous croyons qu’un cadeau n’est pas seulement un objet : c’est une émotion, un souvenir, un sourire.
-                <br />
-                Notre mission est simple : créer des moments mémorables grâce à des surprises personnalisées, élégantes et pensées avec cœur.
+              <p className="text-base leading-relaxed" style={{ color: colors.textSecondary }}>
+                Nous créons des moments mémorables grâce à des surprises personnalisées et pensées avec cœur.
               </p>
             </div>
 
-            <div className="space-y-4">
-              {missionItems.map((it, idx) => (
-                <div
-                  key={it.key}
-                  className="mission-item p-4 rounded-2xl border border-white/10 cursor-pointer transition-all"
+            <div className="space-y-3">
+              {missionItems.map((item, idx) => (
+                <div 
+                  key={item.key} 
+                  className="mission-item p-5 rounded-xl cursor-pointer transition-all hover:scale-[1.02]"
                   style={{
-                    backgroundColor: idx === activeMissionIndex ? "rgba(255,193,7,0.10)" : "transparent",
+                    backgroundColor: idx === activeMissionIndex ? `${colors.accent}20` : "rgba(255,255,255,0.03)",
+                    border: `2px solid ${idx === activeMissionIndex ? colors.accent : "rgba(255,255,255,0.1)"}`,
                   }}
                   onMouseEnter={() => setActiveMissionIndex(idx)}
                 >
-                  <div className="flex items-start gap-3">
-                    <span className="mt-2 inline-block h-2 w-2 rounded-full" style={{ backgroundColor: colors.accent }} />
-                    <div className="space-y-1">
-                      <p className="font-[Poppins] font-semibold" style={{ color: colors.textPrimary }}>
-                        {it.title}
-                      </p>
-                      <p className="text-sm font-[Poppins]" style={{ color: colors.textSecondary }}>
-                        {it.desc}
-                      </p>
-                    </div>
-                  </div>
+                  <p className="font-bold mb-2 text-base" style={{ color: colors.textPrimary }}>
+                    {item.title}
+                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: colors.textSecondary }}>
+                    {item.desc}
+                  </p>
                 </div>
               ))}
             </div>
-
-            <div className="space-y-3">
-              <p className="text-sm font-[Poppins]" style={{ color: colors.textSecondary }}>
-                Chaque détail compte : le choix des couleurs, le décor, la musique, les fleurs, le timing…
-                Nous prenons le temps de comprendre vos envies et votre histoire.
-              </p>
-              <ul className="space-y-2">
-                {["Service professionnel et discret", "Respect du budget", "Organisation fluide", "Offrir le plaisir en cadeau"].map((t) => (
-                  <li key={t} className="flex items-start gap-3 font-[Poppins]">
-                    <span className="mt-2 inline-block h-2 w-2 rounded-full" style={{ backgroundColor: colors.accent }} />
-                    <span style={{ color: colors.textSecondary }}>{t}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="font-[Poppins] font-semibold" style={{ color: colors.textPrimary }}>
-                Chez Service Cordial, nous transformons chaque instant en souvenir.
-              </p>
-            </div>
           </div>
 
-          <div className="mission-fade">
-            <div className="mission-media relative w-full rounded-3xl overflow-hidden shadow-2xl border border-white/10"
-              style={{ height: "clamp(320px, 34vw, 520px)" }}
-            >
-              <div
-                className="absolute inset-0 blur-3xl opacity-40"
-                style={{ background: "linear-gradient(135deg, rgba(255,193,7,0.35), rgba(122,162,247,0.25))" }}
-              />
-              <div className="relative w-full h-full">
-                {activeItem.mediaType === "video" ? (
-                  <video
-                    key={activeItem.mediaSrc}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    src={activeItem.mediaSrc}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                  />
-                ) : (
-                  <img
-                    key={activeItem.mediaSrc}
-                    src={activeItem.mediaSrc}
-                    alt={activeItem.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                )}
+          <div className="mission-content pt-10 md:pt-0">
+            <div className="sticky top-24 space-y-8">
+              
+              {/* Card principale avec item actif */}
+              <div 
+                className="p-8 md:p-10 rounded-3xl backdrop-blur-sm transition-all duration-500"
+                style={{
+                  background: `linear-gradient(135deg, ${colors.accent}15, ${colors.accent}05)`,
+                  border: `2px solid ${colors.accent}50`,
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.2)'
+                }}
+              >
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+                      style={{ backgroundColor: `${colors.accent}30` }}
+                    >
+                      {activeItem.title.split(' ')[0]}
+                    </div>
+                    <h3 
+                      className="text-2xl md:text-3xl font-bold"
+                      style={{ 
+                        fontFamily: "Playfair Display, serif", 
+                        color: colors.textPrimary 
+                      }}
+                    >
+                      {activeItem.title.replace(/^[^ ]+ /, '')}
+                    </h3>
+                  </div>
+                  
+                  <p 
+                    className="text-lg leading-relaxed"
+                    style={{ color: colors.textSecondary }}
+                  >
+                    {activeItem.desc}
+                  </p>
+
+                  <div className="pt-4 flex items-center gap-3">
+                    <div 
+                      className="h-1 w-20 rounded-full"
+                      style={{ backgroundColor: colors.accent }}
+                    />
+                    <span 
+                      className="text-xs uppercase tracking-wider font-bold"
+                      style={{ color: colors.accent }}
+                    >
+                      Service Premium
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="mt-5 p-5 rounded-2xl border border-white/10" style={{ backgroundColor: colors.bgCard }}>
-              <p className="font-[Poppins] font-semibold" style={{ color: colors.textPrimary }}>
-                {activeItem.title}
-              </p>
-              <p className="text-sm font-[Poppins]" style={{ color: colors.textSecondary }}>
-                {activeItem.desc}
-              </p>
+              {/* Stats ou features */}
+              <div className="grid grid-cols-2 gap-4">
+                <div 
+                  className="p-6 rounded-2xl text-center"
+                  style={{
+                    backgroundColor: `${colors.accent}10`,
+                    border: `1px solid ${colors.accent}30`
+                  }}
+                >
+                  <p 
+                    className="text-3xl font-bold mb-1"
+                    style={{ color: colors.accent }}
+                  >
+                    100%
+                  </p>
+                  <p 
+                    className="text-sm"
+                    style={{ color: colors.textSecondary }}
+                  >
+                    Personnalisé
+                  </p>
+                </div>
+                
+                <div 
+                  className="p-6 rounded-2xl text-center"
+                  style={{
+                    backgroundColor: `${colors.accent}10`,
+                    border: `1px solid ${colors.accent}30`
+                  }}
+                >
+                  <p 
+                    className="text-3xl font-bold mb-1"
+                    style={{ color: colors.accent }}
+                  >
+                    24/7
+                  </p>
+                  <p 
+                    className="text-sm"
+                    style={{ color: colors.textSecondary }}
+                  >
+                    À l'écoute
+                  </p>
+                </div>
+              </div>
+
+              {/* CTA secondaire */}
+              <a
+                href="https://wa.me/237690271950"
+                className="block w-full text-center px-6 py-4 rounded-full font-semibold transition-all hover:scale-105"
+                style={{
+                  backgroundColor: colors.accent,
+                  color: colors.isDark ? "#0F172A" : "#0B1220",
+                  boxShadow: '0 10px 30px rgba(255, 193, 7, 0.3)'
+                }}
+              >
+                Réserver cette prestation
+              </a>
+
             </div>
           </div>
+
         </div>
       </div>
     </section>

@@ -124,14 +124,13 @@ export default function Footer() {
             {/* Contact */}
             <div className="footer-column">
               <h4 className="font-[Poppins] font-semibold mb-4" style={{ color: colors.textPrimary }}>Contact</h4>
-              <p className="text-sm mb-2" style={{ color: colors.textMuted }}>Email: contact@notreart.com</p>
-              <p className="text-sm mb-2" style={{ color: colors.textMuted }}>Téléphone: +237 699 123 456</p>
+              <p className="text-sm mb-2" style={{ color: colors.textMuted }}>Email: servicecordiale@gmail.com</p>
+              <p className="text-sm mb-2" style={{ color: colors.textMuted }}>Téléphone: +1 514 574 3785 / +237 686 35 35 24</p>
             </div>
-
           </div>
 
           <div className="mt-12 text-center text-gray-500 text-sm font-[Poppins]">
-            &copy; SERVICE CORDIALE - Notre Art notre service créatif.
+            &copy; SERVICE CORDIAL - Notre Art notre service créatif.
           </div>
         </footer>
 
