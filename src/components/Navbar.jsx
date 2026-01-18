@@ -29,18 +29,18 @@ export default function Navbar() {
           // Afficher la navbar si on scroll vers le haut
           if (currentScrollY < lastScrollY) {
             setIsVisible(true);
-            
+
             // Reset le timer de disparition après 5s
             if (hideTimeoutRef.current) {
               clearTimeout(hideTimeoutRef.current);
             }
-            
+
             hideTimeoutRef.current = setTimeout(() => {
               if (window.scrollY > 100) {
                 setIsVisible(false);
               }
             }, 5000);
-          } 
+          }
           // Cacher la navbar si on scroll vers le bas (après 100px)
           else if (currentScrollY > lastScrollY && currentScrollY > 100) {
             setIsVisible(false);
@@ -66,7 +66,7 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       if (hideTimeoutRef.current) {
@@ -121,7 +121,7 @@ export default function Navbar() {
     <nav
       ref={navRef}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-      style={{ 
+      style={{
         color: colors.navText,
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)'
       }}
@@ -147,7 +147,7 @@ export default function Navbar() {
             <Link
               to="/#acceuil"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
-              style={{ 
+              style={{
                 color: colors.navText,
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
@@ -163,7 +163,7 @@ export default function Navbar() {
             <Link
               to="/#nos-offres"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
-              style={{ 
+              style={{
                 color: colors.navText,
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
@@ -173,7 +173,7 @@ export default function Navbar() {
             <Link
               to="/contact"
               className="text-gray-100 font-[Playfair Display] font-bold relative transition-all duration-300 hover:scale-110 after:content-[''] after:block after:w-0 after:h-0.5 after:transition-all after:duration-300 hover:after:w-full"
-              style={{ 
+              style={{
                 color: colors.navText,
                 textShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
@@ -189,8 +189,8 @@ export default function Navbar() {
               style={{
                 backgroundColor: isDark ? '#FFC107' : '#1E293B',
                 color: isDark ? '#0F172A' : '#FFC107',
-                boxShadow: isDark 
-                  ? '0 4px 15px rgba(255, 193, 7, 0.4)' 
+                boxShadow: isDark
+                  ? '0 4px 15px rgba(255, 193, 7, 0.4)'
                   : '0 4px 15px rgba(30, 41, 59, 0.4)'
               }}
             >
@@ -211,42 +211,93 @@ export default function Navbar() {
 
         {/* MENU MOBILE */}
         {menuOpen && (
-          <div className="md:hidden pb-4 space-y-2">
-            <Link
-              to="/#acceuil"
-              className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
-              style={{ 
-                color: colors.navText,
-                backgroundColor: 'rgba(255, 193, 7, 0.1)'
-              }}
+          <>
+            {/* Overlay sombre derrière le menu */}
+            <button
+              aria-label="Fermer le menu"
               onClick={() => setMenuOpen(false)}
-            >
-              Acceuil
-            </Link>
-            <Link
-              to="/#nos-offres"
-              className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
-              style={{ 
-                color: colors.navText,
-                backgroundColor: 'rgba(255, 193, 7, 0.1)'
+              className="fixed inset-0 md:hidden z-40"
+              style={{ backgroundColor: "rgba(0,0,0,0.55)" }}
+            />
+
+            {/* Panneau du menu */}
+            <div
+              className="md:hidden relative z-50 mt-2 p-3 rounded-2xl border shadow-xl"
+              style={{
+                backgroundColor: isDark ? "rgba(15, 23, 42, 0.98)" : "rgba(255,255,255,0.98)",
+                borderColor: isDark ? "rgba(255, 193, 7, 0.25)" : "rgba(15, 23, 42, 0.12)",
+                backdropFilter: "blur(16px)",
               }}
-              onClick={() => setMenuOpen(false)}
             >
-              Nos offres
-            </Link>
-            <Link
-              to="/contact"
-              className="text-gray-100 block py-3 px-4 rounded-lg font-[Playfair Display] font-bold transition-all duration-300 hover:scale-105"
-              style={{ 
-                color: colors.navText,
-                backgroundColor: 'rgba(255, 193, 7, 0.1)'
-              }}
-              onClick={() => setMenuOpen(false)}
-            >
-              Contact
-            </Link>
-          </div>
+              <Link
+                to="/#acceuil"
+                className="block py-3 px-4 rounded-xl font-[Playfair Display] font-bold transition-all duration-300"
+                style={{
+                  color: isDark ? "#FFFFFF" : "#0F172A",
+                  backgroundColor: isDark ? "rgba(255, 193, 7, 0.16)" : "rgba(15, 23, 42, 0.06)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.28)"
+                    : "rgba(255, 193, 7, 0.22)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.16)"
+                    : "rgba(15, 23, 42, 0.06)";
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                Accueil
+              </Link>
+
+              <Link
+                to="/#nos-offres"
+                className="mt-2 block py-3 px-4 rounded-xl font-[Playfair Display] font-bold transition-all duration-300"
+                style={{
+                  color: isDark ? "#FFFFFF" : "#0F172A",
+                  backgroundColor: isDark ? "rgba(255, 193, 7, 0.16)" : "rgba(15, 23, 42, 0.06)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.28)"
+                    : "rgba(255, 193, 7, 0.22)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.16)"
+                    : "rgba(15, 23, 42, 0.06)";
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                Nos offres
+              </Link>
+
+              <Link
+                to="/contact"
+                className="mt-2 block py-3 px-4 rounded-xl font-[Playfair Display] font-bold transition-all duration-300"
+                style={{
+                  color: isDark ? "#FFFFFF" : "#0F172A",
+                  backgroundColor: isDark ? "rgba(255, 193, 7, 0.16)" : "rgba(15, 23, 42, 0.06)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.28)"
+                    : "rgba(255, 193, 7, 0.22)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isDark
+                    ? "rgba(255, 193, 7, 0.16)"
+                    : "rgba(15, 23, 42, 0.06)";
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                Contact
+              </Link>
+            </div>
+          </>
         )}
+
       </div>
     </nav>
   );

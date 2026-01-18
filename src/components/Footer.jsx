@@ -75,7 +75,7 @@ export default function Footer() {
           </p>
           <a
             ref={subscribeRef}
-            href="https://www.facebook.com/"
+            href="https://www.facebook.com/share/19tSRm6SgN/?mibextid=wwXIfr"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-3 rounded-full font-bold transition-colors"

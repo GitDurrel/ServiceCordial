@@ -13,12 +13,12 @@ export default function NotreArt() {
   const sectionRef = useRef(null);
 
   const galleryImages = [
-    { src: '/img2.jpg', size: 'small'},
-    { src: '/img5.jpg', size: 'medium'},
-    { src: '/img_art2.jpg', size: 'large', alt: 'Composition florale' },
+    { src: '/img2.jpg', size: 'small' },
+    { src: '/img5.jpg', size: 'medium' },
+    { src: '/img_art4.jpeg', size: 'large', alt: 'Composition florale', pos: '70% 35%' },
     { src: '/img_art.jpg', size: 'small', alt: 'Décoration de table' },
     { src: '/img_art3.jpg', size: 'medium', alt: 'Arrangement créatif' },
-    { src: '/img_art4.jpeg', size: 'small', alt: 'Détails raffinés' },
+    { src: '/img_art2.jpg', size: 'small', alt: 'Détails raffinés' },
   ];
 
   useGSAP(() => {
@@ -76,11 +76,11 @@ export default function NotreArt() {
 
     // Effet parallax subtil sur desktop
     const mm = gsap.matchMedia();
-    
+
     mm.add("(min-width: 768px)", () => {
       items.forEach((item, index) => {
         const speed = index % 2 === 0 ? 30 : -30;
-        
+
         gsap.to(item, {
           y: speed,
           ease: "none",
@@ -122,7 +122,7 @@ export default function NotreArt() {
           className="art-description text-sm md:text-base font-[Poppins] text-center max-w-3xl mx-auto mb-16 leading-relaxed"
           style={{ color: colors.textSecondary }}
         >
-          Découvrez notre savoir-faire à travers une sélection de nos créations les plus emblématiques. 
+          Découvrez notre savoir-faire à travers une sélection de nos créations les plus emblématiques.
           Chaque composition raconte une histoire unique, mêlant élégance, créativité et attention aux détails.
         </p>
 
@@ -158,19 +158,21 @@ export default function NotreArt() {
                     src={img.src}
                     alt={img.alt}
                     className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-2"
+                    style={{ objectPosition: img.pos || "50% 50%" }}
                     loading="lazy"
                   />
-                  
+
+
                   {/* Overlay avec effet de lumière */}
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                     style={{
                       background: `linear-gradient(135deg, ${colors.accent}20 0%, transparent 60%)`
                     }}
                   />
-                  
+
                   {/* Bordure lumineuse au hover */}
-                  <div 
+                  <div
                     className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
                       boxShadow: `inset 0 0 40px ${colors.accent}40`
@@ -180,7 +182,7 @@ export default function NotreArt() {
 
                 {/* Badge décoratif optionnel */}
                 {idx === 0 && (
-                  <div 
+                  <div
                     className="absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-semibold font-[Poppins] backdrop-blur-sm"
                     style={{
                       backgroundColor: `${colors.accent}90`,
@@ -209,9 +211,9 @@ export default function NotreArt() {
             <span className="relative z-10 transition-colors duration-300 group-hover:text-slate-900">
               Voir toute la galerie
             </span>
-            
+
             {/* Effet de remplissage au hover */}
-            <div 
+            <div
               className="absolute inset-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
               style={{ backgroundColor: colors.accent }}
             />

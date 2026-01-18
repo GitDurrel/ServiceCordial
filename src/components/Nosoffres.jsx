@@ -19,28 +19,28 @@ const Nosoffres = () => {
             name: "Pack amour",
             title: "Exprimez vos sentiments avec élégance",
             description: "Un pack pensé pour surprendre, émouvoir et créer des moments romantiques inoubliables.",
-            image: "/pack_amour.jpeg"
+            image: "/bouquet-pack-amour-complet.png"
         },
         {
             id: 2,
             name: "Pack anniversaire",
             title: "Célébrez chaque année avec style",
             description: "Tout le nécessaire pour organiser un anniversaire mémorable sans stress ni improvisation.",
-            image: "/pack_anniversaire.jpeg"
+            image: "/pack-anniv-avec-bouquet.png"
         },
         {
             id: 3,
             name: "Pack bapteme",
             title: "Un moment sacré, parfaitement organisé",
             description: "Une solution complète pour célébrer le baptême dans la sérénité et l’élégance.",
-            image: "/pack_bapteme.jpeg"
+            image: "/pack-bapteme-revisité.png"
         },
         {
             id: 4,
             name: "Pack composé",
             title: "Créez un événement à votre image",
             description: "Composez librement votre pack selon vos besoins et le style de votre événement.Bouquet d'argent, bouquet de fleur, ...",
-            image: "/pack_compose.jpeg"
+            image: "/pack-composé-revisité.jpg"
         }
 
     ];
