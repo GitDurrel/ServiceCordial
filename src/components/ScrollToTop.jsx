@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronUp } from 'lucide-react';
+import { useThemeColors } from './ThemeContext';
 
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const colors = useThemeColors();
 
   useEffect(() => {
     const toggleVisibility = () => {
@@ -29,7 +31,11 @@ const ScrollToTop = () => {
       {isVisible && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 z-50 p-3 bg-yellow-400 text-slate-900 rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-300 hover:scale-110"
+          className="fixed bottom-8 right-8 z-50 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+          style={{
+            backgroundColor: colors.accent,
+            color: colors.isDark ? '#0F172A' : '#0B1220'
+          }}
           aria-label="Retour en haut"
         >
           <ChevronUp size={24} />

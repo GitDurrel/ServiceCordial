@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { Link } from 'react-router-dom';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import { useGSAP } from "@gsap/react";
@@ -51,7 +52,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <section id="contact" className="py-16 px-6" style={{ background: colors.bgPrimary }}>
+    <section className="py-16 px-6" style={{ background: colors.bgPrimary }}>
       <div className="max-w-7xl mx-auto">
 
         {/* Section Abonnement Facebook */}
@@ -115,9 +116,9 @@ export default function Footer() {
             <div className="footer-column">
               <h4 className="font-[Poppins] font-semibold mb-4" style={{ color: colors.textPrimary }}>Liens utiles</h4>
               <ul className="text-sm space-y-2">
-                <li><a href="#nos-offres" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Nos Offres</a></li>
-                <li><a href="#notre-art" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Notre Art</a></li>
-                <li><a href="#contact" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Contact</a></li>
+                <li><Link to="/#nos-offres" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Nos Offres</Link></li>
+                <li><Link to="/#notre-art" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Notre Art</Link></li>
+                <li><Link to="/contact" className="hover:text-yellow-400 transition-colors" style={{ color: colors.textMuted }}>Contact</Link></li>
               </ul>
             </div>
 
@@ -129,7 +130,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-12 text-center text-gray-500 text-sm font-[Poppins]">
+          <div className="mt-12 text-center text-sm font-[Poppins]" style={{ color: colors.textMuted }}>
             &copy; SERVICE CORDIAL - Notre Art notre service créatif.
           </div>
         </footer>
